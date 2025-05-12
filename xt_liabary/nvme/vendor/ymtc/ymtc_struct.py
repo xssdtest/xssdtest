@@ -1,0 +1,63 @@
+#! /usr/bin/python3
+###############################################################################
+# Data From nvme-cli
+###############################################################################
+from xt_module.xt_structure import *
+
+SI_VD_PROGRAM_FAIL_ID = 0xAB
+SI_VD_ERASE_FAIL_ID = 0xAC
+SI_VD_WEARLEVELING_COUNT_ID = 0xAD
+SI_VD_E2E_DECTECTION_COUNT_ID = 0xB8
+SI_VD_PCIE_CRC_ERR_COUNT_ID = 0xC7
+SI_VD_TIMED_WORKLOAD_MEDIA_WEAR_ID = 0xE2
+SI_VD_TIMED_WORKLOAD_HOST_READ_ID = 0xE3
+SI_VD_TIMED_WORKLOAD_TIMER_ID = 0xE4
+SI_VD_THERMAL_THROTTLE_STATUS_ID = 0xEA
+SI_VD_RETRY_BUFF_OVERFLOW_COUNT_ID = 0xF0
+SI_VD_PLL_LOCK_LOSS_COUNT_ID = 0xF3
+SI_VD_TOTAL_WRITE_ID = 0xF4
+SI_VD_HOST_WRITE_ID = 0xF5
+SI_VD_SYSTEM_AREA_LIFE_LEFT_ID = 0xF6
+SI_VD_TOTAL_READ_ID = 0xFA
+SI_VD_TEMPT_SINCE_BORN_ID = 0xE7
+SI_VD_POWER_CONSUMPTION_ID = 0xE8
+SI_VD_TEMPT_SINCE_BOOTUP_ID = 0xAF
+SI_VD_POWER_LOSS_PROTECTION_ID = 0xEC
+SI_VD_READ_FAIL_ID = 0xF2
+SI_VD_THERMAL_THROTTLE_TIME_ID = 0xEB
+SI_VD_FLASH_MEDIA_ERROR_ID = 0xED
+
+SMART_INFO_SIZE = 4096
+ID_SIZE = 3
+NM_SIZE = 2
+RAW_SIZE = 7
+SI_VD_PROGRAM_FAIL = 0
+SI_VD_ERASE_FAIL = 1
+SI_VD_WEARLEVELING_COUNT = 2
+SI_VD_E2E_DECTECTION_COUNT = 3
+SI_VD_PCIE_CRC_ERR_COUNT = 4
+SI_VD_THERMAL_THROTTLE_STATUS = 8
+SI_VD_TOTAL_WRITE = 11
+SI_VD_HOST_WRITE = 12
+SI_VD_TOTAL_READ = 14
+SI_VD_TEMPT_SINCE_BORN = 15
+SI_VD_POWER_CONSUMPTION = 16
+SI_VD_TEMPT_SINCE_BOOTUP = 17
+SI_VD_POWER_LOSS_PROTECTION = 18
+SI_VD_READ_FAIL = 19
+SI_VD_THERMAL_THROTTLE_TIME = 20
+SI_VD_FLASH_MEDIA_ERROR = 21
+NR_SMART_ITEMS = 22
+
+class nvme_smart_log_item(StructureBase):
+    _fields_ = [
+        ('id', c_uint8 * ID_SIZE),
+        ('nm_val', c_uint8 * NM_SIZE),
+        ('raw_val', c_uint8 * RAW_SIZE),
+    ]
+
+class nvme_ymtc_smart_log(StructureBase):
+    _fields_ = [
+        ('itemArr', nvme_smart_log_item * NR_SMART_ITEMS),
+        ('resv', c_uint8 * (SMART_INFO_SIZE - sizeof(nvme_smart_log_item) * NR_SMART_ITEMS)),
+    ]

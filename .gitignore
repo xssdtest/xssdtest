@@ -1,0 +1,16 @@
+TAGS
+.vscode
+.idea
+build
+__pycache__
+env
+spdk
+platform_diff
+xt_interface.c
+xt_random.c
+xt_interface*.so
+xt_random*.so
+*.log
+*.pyc
+*.o
+*.d
