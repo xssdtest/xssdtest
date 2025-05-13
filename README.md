@@ -7,14 +7,23 @@
 git clone https://github.com/xssdtest/xssdtest.git
 ```
 ***
-# Set UP Environment And Run Script
+# Set UP Environment And Test Script
 ### Set up SPDK and Python environment
+#### If the environment is not configured
 ```
 cd xssdtest
 sudo ./install.sh
 ```
+#### If the environment has already been configured
+```
+cd xssdtest
+git submodule update --init --recursive
+git submodule update --remote --recursive
+cd xt_platform/spdk; ./configure --without-isal;make -j32
+cd ../; sudo ./build.sh
+```
 ***
-### Run Script
+### Test script with null engine
 ```
 sudo python3 xt_scripts/data_path/xt_datapath_sample.py
 ```

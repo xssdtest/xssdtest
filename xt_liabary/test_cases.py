@@ -172,21 +172,7 @@ class TestCase(object):
         self.run_type = args.run_type
         self.hugepage = args.hugepage
         self.disable_multi_card = args.disable_multi_card
-
-        # Logging and Debugging Configuration
-        self.jenkins_info = args.jenkins_info
-        self.runid = args.runid
         self.dev_info = args.dev_info
-        self.log_path = args.log_path
-        self.log_name = args.log_name
-        self.logger = self.create_log()
-
-        # Git Branch and Code Update Management
-        self.branch_name = args.branch_name
-        self.git_branch_check()
-        self.code_update = args.code_update
-        self.submodule_update = args.submodule_update
-        self.code_compile = args.code_compile
 
         # Device Parsing and PCIe/NVMe Configuration
         self.engine_type = args.engine_type
@@ -197,13 +183,25 @@ class TestCase(object):
         self.nvme_version = args.nvme_version
         self.nvme_mi_version = args.nvme_mi_version
 
-        # Test Behavior and Safety Switches
+        # Logging and Debugging Configuration
+        self.jenkins_info = args.jenkins_info
+        self.runid = args.runid
+        self.log_path = args.log_path
+        self.log_name = args.log_name
         self.spdk_debug_log = args.spdk_debug_log
         self.disable_logger = args.disable_logger
         self.process_trace = args.process_trace
         self.enable_cmd_trace = args.enable_cmd_trace
         self.disable_admin_passthru = args.disable_admin_passthru
         self.disable_io_passthru = args.disable_io_passthru
+        self.logger = self.create_log()
+
+        # Git Branch and Code Update Management
+        self.branch_name = args.branch_name
+        self.git_branch_check()
+        self.code_update = args.code_update
+        self.submodule_update = args.submodule_update
+        self.code_compile = args.code_compile
 
         # Firmware and Abnormal Status Handling
         self.power_cycle = args.power_cycle
@@ -230,6 +228,30 @@ class TestCase(object):
         self.fio_version = args.fio_version
         self.admin_cmds_timeout = args.admin_cmds_timeout
         self.shutdown_timeout = args.shutdown_timeout
+        self.vendor_name = args.vendor_name
+        self.base_fw_ver = args.base_fw_ver
+        self.new_fw_img = args.new_fw_img
+        self.disable_check = args.disable_check
+        self.disable_vu_check = args.disable_vu_check
+        self.power_file = args.power_file
+        self.power_type = args.power_type
+        self.masterip = args.masterip
+        self.capacity_change = args.capacity_change
+        self.set_timestamp = args.set_timestamp
+        self.get_vu_file = args.get_vu_file
+        self.io_cmds_timeout = args.io_cmds_timeout
+        self.dsm_cmds_timeout = args.dsm_cmds_timeout
+        self.fw_active_cmds_timeout = args.fw_active_cmds_timeout
+        self.vu_timeout = args.vu_timeout
+        self.format_timeout = args.format_timeout
+        self.sanitize_timeout = args.sanitize_timeout
+        self.shutdown_timeout = args.shutdown_timeout
+        self.power_failed_timeout = args.power_failed_timeout
+        self.probe_timeout = args.probe_timeout
+        self.reset_timeout = args.reset_timeout
+        self.pci_whitelist = args.pci_whitelist
+        self.admin_max_data_transfer_size = args.admin_max_data_transfer_size
+        self.default_nsid = args.default_nsid
 
         # Device Object Creation
         if ("nvme" in self.engine_type or "null" in self.engine_type) and (not self.engine_type.endswith("tbd")):
@@ -237,6 +259,7 @@ class TestCase(object):
         else:
             assert False, self.logger.error("get a invalid or not implemented engine type {engine_type}".format(engine_type=self.engine_type))
         self.default_device = self.device_list[self.dev_num]
+
 
     def create_log(self):
         """
@@ -514,55 +537,55 @@ class TestCase(object):
                     print("Get a invalid PCI info in %s" % pcie_port)
 
 
-def pcie_speed_check(self, pcie_info=None, report_error=True):
-    """
-    Checks whether the current PCIe link speed and width match the expected values.
+    def pcie_speed_check(self, pcie_info=None, report_error=True):
+        """
+        Checks whether the current PCIe link speed and width match the expected values.
 
-    Functionality:
-    - Uses `pcie_speed` and `pcie_width` from the instance to perform validation.
-    - First calls `update_pcie_speed()` to fetch current PCIe link information.
-    - For each specified PCIe port, compares actual speed/width with expected values.
-    - Logs mismatches using `self.logger.error()` and optionally raises an assertion error.
+        Functionality:
+        - Uses `pcie_speed` and `pcie_width` from the instance to perform validation.
+        - First calls `update_pcie_speed()` to fetch current PCIe link information.
+        - For each specified PCIe port, compares actual speed/width with expected values.
+        - Logs mismatches using `self.logger.error()` and optionally raises an assertion error.
 
-    Parameters:
-    - pcie_info (str or list): Optional. PCIe address or list of addresses to validate.
-      If None, uses `self.pcie_list`.
-    - report_error (bool): If True, raises an AssertionError on mismatch. If False,
-      only logs the discrepancy without failing.
+        Parameters:
+        - pcie_info (str or list): Optional. PCIe address or list of addresses to validate.
+          If None, uses `self.pcie_list`.
+        - report_error (bool): If True, raises an AssertionError on mismatch. If False,
+          only logs the discrepancy without failing.
 
-    Side Effects:
-    - Modifies global dictionary [INITLINKSPEEDDICT](file:xssdtest/xt_liabary/test_cases.py) by calling [update_pcie_speed()](file:xssdtest/xt_liabary/test_cases.py).
-    - May raise an `AssertionError` if speed or width does not match and `report_error` is True.
-    - Logs detailed error messages about mismatches via `self.logger.error()`.
+        Side Effects:
+        - Modifies global dictionary [INITLINKSPEEDDICT](file:xssdtest/xt_liabary/test_cases.py) by calling [update_pcie_speed()](file:xssdtest/xt_liabary/test_cases.py).
+        - May raise an `AssertionError` if speed or width does not match and `report_error` is True.
+        - Logs detailed error messages about mismatches via `self.logger.error()`.
 
-    Example:
-        >>> test_case.pcie_speed = 8.0
-        >>> test_case.pcie_width = 4
-        >>> test_case.pcie_speed_check()
-        # Will pass if all devices are running at PCIe Gen4 x4 (8.0GT/s x4)
-    """
+        Example:
+            >>> test_case.pcie_speed = 8.0
+            >>> test_case.pcie_width = 4
+            >>> test_case.pcie_speed_check()
+            # Will pass if all devices are running at PCIe Gen4 x4 (8.0GT/s x4)
+        """
 
-    # Normalize pcie_info as a list
-    pcie_info = pcie_info if pcie_info else self.pcie_list
-    pcie_info = pcie_info if isinstance(pcie_info, list) else [pcie_info]
+        # Normalize pcie_info as a list
+        pcie_info = pcie_info if pcie_info else self.pcie_list
+        pcie_info = pcie_info if isinstance(pcie_info, list) else [pcie_info]
 
-    # Initial update of PCIe link speeds
-    self.update_pcie_speed(pcie_info=pcie_info)
+        # Initial update of PCIe link speeds
+        self.update_pcie_speed(pcie_info=pcie_info)
 
-    # Only proceed if expected PCIe speed and width are defined
-    if self.pcie_speed and self.pcie_width:
-        # Re-update PCIe speed info to ensure fresh data before final validation
-        self.update_pcie_speed(pcie_info)
+        # Only proceed if expected PCIe speed and width are defined
+        if self.pcie_speed and self.pcie_width:
+            # Re-update PCIe speed info to ensure fresh data before final validation
+            self.update_pcie_speed(pcie_info)
 
-        for pcie_port in pcie_info:
-            # Retrieve the current speed and width from shared state
-            speed, width = INITLINKSPEEDDICT["%s" % pcie_port]
+            for pcie_port in pcie_info:
+                # Retrieve the current speed and width from shared state
+                speed, width = INITLINKSPEEDDICT["%s" % pcie_port]
 
-            # Check if actual values match expected ones
-            if speed != self.pcie_speed or width != self.pcie_width:
-                self.logger.error("PCIe port %s current width is x%s, but pcie_width is x%s" %(pcie_port, width, self.pcie_width))
-                self.logger.error("PCIe port %s current speed is %sGT/s, but pcie_speed is %sGT/s" % (pcie_port, speed, self.pcie_speed))
-                assert not report_error, "PCIe speed or width mismatch detected"
+                # Check if actual values match expected ones
+                if speed != self.pcie_speed or width != self.pcie_width:
+                    self.logger.error("PCIe port %s current width is x%s, but pcie_width is x%s" %(pcie_port, width, self.pcie_width))
+                    self.logger.error("PCIe port %s current speed is %sGT/s, but pcie_speed is %sGT/s" % (pcie_port, speed, self.pcie_speed))
+                    assert not report_error, "PCIe speed or width mismatch detected"
 
 
 if __name__ == '__main__':

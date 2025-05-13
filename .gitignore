@@ -4,8 +4,10 @@ TAGS
 build
 __pycache__
 env
-spdk
+spdk/*
 platform_diff
+config-host.mak
+config-host.h
 xt_interface.c
 xt_random.c
 xt_interface*.so
@@ -14,3 +16,4 @@ xt_random*.so
 *.pyc
 *.o
 *.d
+*.swp

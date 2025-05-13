@@ -63,6 +63,14 @@ save_records() {
     done
 }
 
+setup_xt(){
+    if [ -f "/home/anaconda3/bin/python" ]; then
+        /home/anaconda3/bin/python setup.py build_ext --inplace || { echo "Build failed"; exit 1; }
+    else
+        python3 setup.py build_ext --inplace || { echo "Build failed"; exit 1; }
+    fi
+}
+
 load_records
 
 for path in "${!commit_ids[@]}"; do
@@ -93,13 +101,14 @@ if $need_rebuild; then
     if [ -d "build" ]; then
         rm -fr build
     fi
-    /home/anaconda3/bin/python setup.py build_ext --inplace || { echo "Build failed"; exit 1; }
+    setup_xt
+
     echo "Changes detected, need to rebuild."
 else
     if ls /path/to/dir/xt_random*.so >/dev/null 2>&1 && \
        ls /path/to/dir/xt_interface*.so >/dev/null 2>&1; then
         echo "No changes detected."
     else
-        /home/anaconda3/bin/python setup.py build_ext --inplace || { echo "Build failed"; exit 1; }
+        setup_xt
     fi
 fi
